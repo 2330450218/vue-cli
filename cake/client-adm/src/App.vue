@@ -3,12 +3,16 @@
     <div>
       <topnav></topnav>
     </div>
+
     <div class="leftnav">
       <leftnav></leftnav>
     </div>
     <div class="rightcont">
-    <router-view></router-view>
-      
+      <router-view></router-view>
+    </div>
+    <div class="clear"></div>
+    <div>
+      <fixbottom></fixbottom>
     </div>
   </div>
 </template>
@@ -16,7 +20,7 @@
 export default {};
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -28,16 +32,28 @@ export default {};
   margin: 0;
   padding: 0;
 }
-.all{
+.all {
   background-color: #f4f4f4;
 }
+
+.clear {
+  clear: both;
+}
+</style>
+<style  scoped>
 .leftnav {
   margin-top: 20px;
-  float: left;
+  position: absolute;
+  left: 0;
+  z-index: 10;
 }
 .rightcont {
-  float: left;
-  margin-top: 20px;
-  margin-left: 50px;
+  width: 72%;
+  /* float: right; */
+  margin: 20px;
+  margin-left: 220px;
+  height: 56vh;
+  box-sizing: border-box;
+  /* background-color: aqua; */
 }
 </style>

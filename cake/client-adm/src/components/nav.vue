@@ -1,4 +1,5 @@
 <template>
+  <!-- 头部导航栏全局组件 -->
   <div id="app">
     <el-menu
       :default-active="activeIndex2"
@@ -11,15 +12,8 @@
     >
       <el-menu-item @click="toIndex">麦田斋后台管理系统</el-menu-item>
       <el-menu-item index="1">处理中心</el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">我的工作台</template>
-        <el-menu-item index="2-1">用户信息</el-menu-item>
-        <el-menu-item index="2-2" @click="togoodsShop">商品信息</el-menu-item>
-        <el-menu-item index="2-3">轮播图信息</el-menu-item>
-        <el-menu-item index="2-4">专区锚点</el-menu-item>
-      </el-submenu>
+      <el-menu-item index="2">工作台</el-menu-item>
       <el-menu-item index="3" disabled>消息中心</el-menu-item>
-     
     </el-menu>
   </div>
 </template>
@@ -28,23 +22,22 @@ export default {
   data() {
     return {
       activeIndex: "1",
-      activeIndex2: "1",
+      activeIndex2: "0",
     };
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-    togoodsShop(){
-      this.$router.push("/goodsShop")
+    togoodsShop() {
+      this.$router.push("/goodsShop");
     },
-    toIndex(){
-        this.$router.push("/")
-    }
+    toIndex() {
+      this.$router.push("/");
+    },
   },
 
-  created(){
-  },
+  created() {},
 };
 </script>
 
@@ -56,6 +49,4 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
-
 </style>

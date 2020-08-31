@@ -1,22 +1,18 @@
 <template>
-<!-- 商品信息管理--需要进一步修改 -->
+<!-- 专区锚点管理--需要进一步修改 -->
   <div>
-    <el-table
-      :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-      border
-      style="width: 100%"
-    >
+    <el-table :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+      border style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column fixed prop="id" label="id" width="150"></el-table-column>
-      <el-table-column prop="name" label="名称" width="120"></el-table-column>
-      <el-table-column prop="url" label="资源地址" width="120"></el-table-column>
-      <el-table-column prop="price" label="价格" width="120"></el-table-column>
-      <el-table-column prop="category" label="介绍" width="300"></el-table-column>
-      <el-table-column prop="weight" label="分量" width="120"></el-table-column>
-      <el-table-column align="center" width="300">
-        <template slot="header">
-          <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
-        </template>
+      <el-table-column prop="name" label="资源路径" width="300"></el-table-column>
+      <el-table-column  align="center" width="300">
+        <template slot="header" >
+        <el-input
+          v-model="search"
+          size="mini"
+          placeholder="输入关键字搜索"/>
+      </template>
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
           <el-button type="text" size="small">删除</el-button>
@@ -28,7 +24,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage4"
-        :page-sizes="[5, 10, 15, 20]"
+        :page-sizes="[5, 10]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         :total="100"
@@ -46,18 +42,6 @@
             <el-form-item label="类别">
               <el-input v-model="sizeForm.classify"></el-input>
             </el-form-item>
-            <el-form-item label="价格">
-              <el-input v-model="sizeForm.price"></el-input>
-            </el-form-item>
-            <el-form-item label="介绍">
-              <el-input v-model="sizeForm.category"></el-input>
-            </el-form-item>
-            <el-form-item label="分量">
-              <el-input v-model="sizeForm.weight"></el-input>
-            </el-form-item>
-            <el-form-item label="图片地址">
-              <el-input v-model="sizeForm.url"></el-input>
-            </el-form-item>
           </el-form>
           <div class="btn">
             <el-button type="primary" @click="addroot">确认添加</el-button>
@@ -69,19 +53,16 @@
   </div>
 </template>
 
+
 <script>
 export default {
   data() {
     return {
-      ischecked: "",
-      search: "",
+      ischecked:"",
+      search:"",
       sizeForm: {
         name: "",
-        classify: "",
-        weight: "",
-        price: "",
-        category: "",
-        url: "",
+        classify:""
       },
       tableData: [
         // {
@@ -93,29 +74,14 @@ export default {
         //   zip: 200333,
         // },
         {
-          id: "2016-05-02",
-          name: "小面包",
-          url: "图片地址",
-          price: "价格",
-          category: " 介绍",
-          weight: "重量",
-        },
-
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
+          id: "1",
+          name: "新品",
+          goods_id: "12",
         },
         {
-          date: "2016-05-07",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
+          id: "2",
+          name: "热门",
+          goods_id: "12",
         },
       ],
       currentPage1: 5,
@@ -134,17 +100,14 @@ export default {
       this.ischecked = false;
     },
     //重置模态窗信息
-    toreset() {
-      this.sizeForm.name = "";
-      this.sizeForm.classify = "";
-      this.sizeForm.weight = "";
-      this.sizeForm.price = "";
-      this.sizeForm.category = "";
-      this.sizeForm.url=""
+    toreset(){
+      this.sizeForm.name="";
+   
+      this.sizeForm.classify="";
     },
     //添加管理员
-    addroot() {
-      console.log("添加成功");
+    addroot(){
+      console.log("添加成功")
     },
     toggleSelection(rows) {
       if (rows) {

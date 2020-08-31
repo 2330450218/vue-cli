@@ -26,6 +26,31 @@ Vue.use(VueRouter)
     name: 'goodsLable',
     component: ()=>import("../views/goods/overviewLable.vue")
   },
+  {
+    path: '/usersOrder',
+    name: 'usersOrder',
+    component: ()=>import("../views/users/overviewOrder.vue")
+  },
+  {
+    path: '/usersCont',
+    name: 'usersCont',
+    component: ()=>import("../views/users/overviewUsers.vue")
+  },
+  {
+    path: '/rootCont',
+    name: 'rootCont',
+    component: ()=>import("../views/users/overviewRoot.vue")
+  },
+  {
+    path: '/swiper',
+    name: 'swiper',
+    component: ()=>import("../views/swiper/overviewswiper.vue")
+  },
+  {
+    path: '/lable',
+    name: 'lable',
+    component: ()=>import("../views/lable/overviewlable.vue")
+  },
   // {
   //   path: '/about',
   //   name: 'About',
