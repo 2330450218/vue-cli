@@ -44,7 +44,13 @@ class UserService extends Service {
         let sql = "update user set pwd = ? where name = ?";
         let list = await this.ctx.app.mysql.query(sql, [pwd, name]);
         return list.affectedRows;
-    }                                                                                                                                                                                                                                                                                                      
+    }
+    //展示用户信息
+    async showUsers(){
+        let sql="select * from user where isroot='0'"
+        let list=await this.ctx.app.mysql.query(sql)
+        return list
+    }                                                                                                                                                                                                                                                                                                     
 }
 
 module.exports = UserService;

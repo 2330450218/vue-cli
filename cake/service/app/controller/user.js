@@ -25,7 +25,11 @@ class UserController extends Controller {
 		let pwd = this.ctx.request.body.pwd;
 		let list = await this.ctx.service.user.changePwd(name, pwd);
 		this.ctx.response.body = list;
-	}
+    }
+    async showUsers(){
+        let list=await this.ctx.service.user.showUsers();
+        this.ctx.response.body=list;
+    }
 }
 
 module.exports = UserController;
