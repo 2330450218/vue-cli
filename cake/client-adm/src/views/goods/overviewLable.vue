@@ -7,16 +7,16 @@
       style="width: 100%"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column fixed prop="id" label="id" width="150"></el-table-column>
-      <el-table-column prop="name" label="资源路径" width="300"></el-table-column>
-      <el-table-column prop="goods_id" label="对应商品id" width="300"></el-table-column>
+      <el-table-column fixed prop="id" label="id" width="150" id="lable_id"></el-table-column>
+      <el-table-column prop="lable" label="标签名字" width="300"></el-table-column>
+      <el-table-column prop="Goods_title" label="对应商品id" width="300"></el-table-column>
       <el-table-column align="center" width="300">
         <template slot="header">
           <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
         </template>
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button type="text" size="small" @click="deleteLable(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -33,23 +33,25 @@
       ></el-pagination>
       <el-button type="primary" plain style="float:left;margin:10px auto;" @click="toaddPage">添加新的记录</el-button>
     </div>
+    添加模拟
     <div v-if="ischecked" class="modal" @click.self="returnPage">
       <div class="addmodal">
         <div class="addform">
           <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
             <el-form-item label="名称">
-              <el-input v-model="sizeForm.name"></el-input>
+              <el-input v-model="sizeForm.name" id="name" ></el-input>
             </el-form-item>
             <el-form-item label="类别">
-              <el-input v-model="sizeForm.classify"></el-input>
+              <el-input v-model="sizeForm.classify" id="Goods_title" ></el-input>
             </el-form-item>
           </el-form>
           <div class="btn">
-            <el-button type="primary" @click="addroot">确认添加</el-button>
+            <el-button type="primary" @click="addLable">确认添加</el-button>
             <el-button type="primary" @click="toreset">重置</el-button>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -61,7 +63,7 @@ export default {
       search:"",
       sizeForm: {
         name: "",
-        classify:""
+        Goods_title:""
       },
       tableData: [
         // {
@@ -72,21 +74,21 @@ export default {
         //   address: "上海市普陀区金沙江路 1518 弄",
         //   zip: 200333,
         // },
-        {
-          id: "1",
-          name: "新品",
-          goods_id: "12",
-        },
-        {
-          id: "2",
-          name: "热门",
-          goods_id: "12",
-        },
+        // {
+        //   id: "1",
+        //   name: "新品",
+        //   goods_id: "12",
+        // },
+        // {
+        //   id: "2",
+        //   name: "热门",
+        //   goods_id: "12",
+        // },
       ],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+       // currentPage1: 5,
+      // currentPage2: 5,
+      // currentPage3: 5,
+      currentPage4: 1,
     };
   },
   methods: {
@@ -103,9 +105,32 @@ export default {
       this.sizeForm.name="";
       this.sizeForm.classify="";
     },
-    //添加管理员
-    addroot(){
-      console.log("添加成功")
+    //添加标签
+    addLable(){
+      let name = document.getElementById("name").value;
+      let Goods_title = document.getElementById("Goods_title").value;
+      this.$http.post("http://127.0.0.1:7001/addLable",{
+          lable:name,
+          Goods_title:Goods_title
+      }).then(res=>{
+          console.log('数据库添加成功')
+      }).catch(err=>{
+
+      })
+    },
+    //删除标签
+    deleteLable(row){
+      var id = row.id;
+      this.$http.get("http://127.0.0.1:7001/deleteLable",{
+        params:{
+          id:id
+        }
+        }).then(res=>{
+          console.log("数据库删除成功")
+          this.$router.go(0)
+        }).catch(err=>{
+
+        })
     },
     toggleSelection(rows) {
       if (rows) {
@@ -128,6 +153,16 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
+  },
+  created(){
+    this.$http.get("http://127.0.0.1:7001/showAlllable",{
+
+    }).then(r=>{
+      console.log(r.data);
+      this.tableData=r.data
+    }).catch(err=>{
+
+    })
   },
 };
 </script>

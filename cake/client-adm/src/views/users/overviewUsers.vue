@@ -18,7 +18,7 @@
         </template>
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button @click="deleteUser(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -41,19 +41,19 @@
         <div class="addform">
           <el-form ref="form" :model="sizeForm" label-width="80px" size="mini" >
             <el-form-item label="用户名">
-              <el-input v-model="sizeForm.name"></el-input>
+              <el-input v-model="sizeForm.name" id="name"></el-input>
             </el-form-item>
             <el-form-item label="密码">
-              <el-input v-model="sizeForm.pwd"></el-input>
+              <el-input v-model="sizeForm.pwd" id="password"></el-input>
             </el-form-item>
             <el-form-item label="手机号码">
-              <el-input v-model="sizeForm.phone"></el-input>
+              <el-input v-model="sizeForm.phone" id="phone"></el-input>
             </el-form-item>
             <el-form-item label="生日">
-              <el-input v-model="sizeForm.birth"></el-input>
+              <el-input v-model="sizeForm.birth" id="birth"></el-input>
             </el-form-item>
             <el-form-item label="地址">
-              <el-input v-model="sizeForm.address"></el-input>
+              <el-input v-model="sizeForm.address" id="address"></el-input>
             </el-form-item>
           </el-form>
           <div class="btn">
@@ -70,6 +70,8 @@
 export default {
   data() {
     return {
+      pagenum: "1",
+      pagesize: "5",
       users:[],
       ischecked: false,
       search: "",
@@ -84,16 +86,46 @@ export default {
     };
   },
   created(){
-    this.$http.get("/showUsers",{
-    }).then(r=>{
-      console.log(r.data);
-      this.users=r.data
-    }).catch()
+     this.showusers()
   },
   methods: {
+    //展示用户
+    showusers() {
+      this.$http
+        .get("http://127.0.0.1:7001/showUsers", {
+          params:{
+            pagenum:this.pagenum,
+            pagesize:this.pagesize
+          }
+        })
+        .then((r) => {
+          console.log(r.data);
+          this.users = r.data;
+        })
+        .catch();
+    },
+
+
+    //删除用户
+      deleteUser(row){
+      var id = row.id;
+      console.log(id)
+      this.$http.get("http://127.0.0.1:7001/deleteUsers",{
+        params:{
+          id:id
+        }
+        }).then(res=>{
+          console.log("数据库删除成功")
+          this.$router.go(0)
+        }).catch(err=>{
+
+        })
+    },
+
      //模态弹窗事件
     toaddPage(){
       this.ischecked=true
+      console.log(11)
     },
     //模态弹窗返回事件
     returnPage(){
@@ -109,7 +141,24 @@ export default {
     },
     //添加用户
     adduser(){
-      // this.$http.post
+      let name = document.getElementById("name").value;
+      let password = document.getElementById("password").value;
+      let phone = document.getElementById("phone").value;
+      let address = document.getElementById("address").value;
+      let birth = document.getElementById("birth").value;
+      console.log(name)
+      this.$http.post("http://127.0.0.1:7001/register",{
+            name:name,
+            password:password,
+            phone:phone,
+            address:address,
+            birth:birth
+      }).then(res=>{
+          console.log('数据库添加成功')
+          this.$router.go(0)
+      }).catch(err=>{
+
+      })
     },
     toggleSelection(rows) {
       if (rows) {
@@ -127,10 +176,14 @@ export default {
       console.log(row);
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagesize = val;
+      console.log(this.pagesize);
+      this.showusers()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagenum = val;
+      console.log(this.pagenum);
+      this.showusers()
     },
   },
 };

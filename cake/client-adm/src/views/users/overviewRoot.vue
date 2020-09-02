@@ -18,7 +18,7 @@
         </template>
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button @click="deleteUser(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -41,19 +41,22 @@
         <div class="addform">
           <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
             <el-form-item label="用户名">
-              <el-input v-model="sizeForm.name"></el-input>
+              <el-input v-model="sizeForm.name" id="name"></el-input>
             </el-form-item>
             <el-form-item label="密码">
-              <el-input v-model="sizeForm.pwd"></el-input>
+              <el-input v-model="sizeForm.pwd" id="password"></el-input>
             </el-form-item>
             <el-form-item label="手机号码">
-              <el-input v-model="sizeForm.phone"></el-input>
+              <el-input v-model="sizeForm.phone" id="phone"></el-input>
             </el-form-item>
             <el-form-item label="生日">
-              <el-input v-model="sizeForm.birth"></el-input>
+              <el-input v-model="sizeForm.birth" id="birth"></el-input>
             </el-form-item>
             <el-form-item label="地址">
-              <el-input v-model="sizeForm.address"></el-input>
+              <el-input v-model="sizeForm.address" id="address"></el-input>
+            </el-form-item>
+            <el-form-item label="isroot">
+              <el-input v-model="sizeForm.isroot" id="isroot"></el-input>
             </el-form-item>
           </el-form>
           <div class="btn">
@@ -70,6 +73,8 @@
 export default {
   data() {
     return {
+      pagenum: "1",
+      pagesize: "5",
       ischecked: false,
       search: "",
       sizeForm: {
@@ -80,70 +85,31 @@ export default {
         pwd: "",
       },
       tableData: [
-        // {
-        //   date: "2016-05-03",
-        //   name: "王小虎",
-        //   province: "上海",
-        //   city: "普陀区",
-        //   address: "上海市普陀区金沙江路 1518 弄",
-        //   zip: 200333,
-        // },
-        {
-          date: "2016-05-02",
-          name: "酥酥",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-08",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
+       
       ],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+       currentPage4: 1,
     };
   },
+  created(){
+     this.showAdministrators()
+  },
   methods: {
+     //展示管理员
+    showAdministrators() {
+      this.$http
+        .get("http://127.0.0.1:7001/showAdministrators", {
+          params:{
+            pagenum:this.pagenum,
+            pagesize:this.pagesize
+          }
+        })
+        .then((r) => {
+          // console.log(r.data);
+          this.tableData = r.data;
+        })
+        .catch();
+    },
+
     //模态弹窗事件
     toaddPage() {
       this.ischecked = true;
@@ -160,10 +126,47 @@ export default {
       this.sizeForm.birth="";
       this.sizeForm.pwd="";
     },
+
     //添加管理员
     addroot(){
-      console.log("添加成功")
+      let name = document.getElementById("name").value;
+      let password = document.getElementById("password").value;
+      let phone = document.getElementById("phone").value;
+      let address = document.getElementById("address").value;
+      let birth = document.getElementById("birth").value;
+      let isroot = document.getElementById("isroot").value;
+      console.log(name,password,phone)
+      this.$http.post("http://127.0.0.1:7001/register",{
+            name:name,
+            password:password,
+            phone:phone,
+            address:address,
+            birth:birth,
+            isroot:isroot
+      }).then(res=>{
+          console.log('数据库添加成功')
+          this.$router.go(0)
+      }).catch(err=>{
+
+      })
     },
+
+    //删除用户
+      deleteUser(row){
+      var id = row.id;
+      console.log(id)
+      this.$http.get("http://127.0.0.1:7001/deleteUsers",{
+        params:{
+          id:id
+        }
+        }).then(res=>{
+          console.log("数据库删除成功")
+          this.$router.go(0)
+        }).catch(err=>{
+
+        })
+    },
+
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {

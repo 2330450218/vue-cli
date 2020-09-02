@@ -5,7 +5,7 @@
       border style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column fixed prop="id" label="id" width="150"></el-table-column>
-      <el-table-column prop="name" label="资源路径" width="300"></el-table-column>
+      <el-table-column prop="url" label="资源路径" width="300"></el-table-column>
       <el-table-column  align="center" width="300">
         <template slot="header" >
         <el-input
@@ -15,7 +15,7 @@
       </template>
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button @click="deletespecialArea(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -36,15 +36,18 @@
       <div class="addmodal">
         <div class="addform">
           <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
-            <el-form-item label="名称">
+            <!-- <el-form-item label="名称">
               <el-input v-model="sizeForm.name"></el-input>
             </el-form-item>
             <el-form-item label="类别">
               <el-input v-model="sizeForm.classify"></el-input>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
           <div class="btn">
-            <el-button type="primary" @click="addroot">确认添加</el-button>
+            <a href="javascript:;" class="choose">选择文件
+          <input type="file" name="" id="file">
+      </a>
+            <el-button type="primary" @click="addSpecialArea">确认添加</el-button>
             <el-button type="primary" @click="toreset">重置</el-button>
           </div>
         </div>
@@ -58,6 +61,9 @@
 export default {
   data() {
     return {
+      pagenum: "1",
+      pagesize: "5",
+
       ischecked:"",
       search:"",
       sizeForm: {
@@ -65,32 +71,78 @@ export default {
         classify:""
       },
       tableData: [
-        // {
-        //   date: "2016-05-03",
-        //   name: "王小虎",
-        //   province: "上海",
-        //   city: "普陀区",
-        //   address: "上海市普陀区金沙江路 1518 弄",
-        //   zip: 200333,
-        // },
-        {
-          id: "1",
-          name: "新品",
-          goods_id: "12",
-        },
-        {
-          id: "2",
-          name: "热门",
-          goods_id: "12",
-        },
+     
+    
       ],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+   // currentPage1: 5,
+      // currentPage2: 5,
+      // currentPage3: 5,
+      currentPage4: 1,
     };
   },
+  created() {
+    this.showspecialArea();
+  },
   methods: {
+    //展示锚点
+    showspecialArea() {
+      this.$http
+        .get("http://127.0.0.1:7001/showspecialArea", {
+          params: {
+            pagenum: this.pagenum,
+            pagesize: this.pagesize,
+          },
+        })
+        .then((r) => {
+          console.log(r.data);
+          this.tableData = r.data;
+        })
+        .catch();
+    },
+
+    //增加锚点图片
+    addSpecialArea() {
+      console.log(111)
+      let file = document.getElementById("file").files[0];
+      console.log(file);
+      let formData = new FormData();
+      formData.append("getspecialArea", file, file.name);
+      const config = {
+        headers: {
+          "Content-Type": "mutipart/form-data;boundary=" + new Date().getTime(), //Content-Type来表示具体请求中的媒体类型信息。
+        },
+      };
+      this.$http
+        .post("http://127.0.0.1:7001/getspecialArea", formData, config)
+        .then((res) => {
+          console.log("数据库上传成功")
+          // this.showGoods();
+          this.$router.go(0)
+          //  document.getElementsByClassName("newImg").src = res.data;
+          //  showAllSwiper();
+        })
+        .catch((err) => {
+          // console.log(err)
+        });
+    },
+
+    //删除锚点
+    deletespecialArea(row) {
+      var id = row.id;
+      console.log(id);
+      this.$http
+        .get("http://127.0.0.1:7001/deletespecialArea", {
+          params: {
+            id: id,
+          },
+        })
+        .then((res) => {
+          console.log("数据库删除成功");
+          this.$router.go(0);
+        })
+        .catch((err) => {});
+    },
+
     //模态弹窗事件
     toaddPage() {
       this.ischecked = true;
@@ -125,11 +177,16 @@ export default {
       console.log(row);
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagesize = val;
+      console.log(this.pagesize);
+      this.showspecialArea();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagenum = val;
+      console.log(this.pagenum);
+      this.showspecialArea();
     },
+
   },
 };
 </script>
@@ -163,5 +220,43 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+.choose input {
+  position: absolute;
+  font-size: 100px;
+  opacity: 0;
+  line-height: 40px;
+  width: 100px;
+  height: 40px;
+  bottom: 0px;
+  right: 0px;
+}
+a.choose {
+  width: 70px;
+}
+.choose {
+  font-size: 1;
+  bottom: 250px;
+  right: 238px;
+  position: absolute; 
+  width: 120px;
+  height: 40px;
+  display: inline-block;
+  background: #409EFF;
+  /* border: 1px solid #99d3f5; */
+  border-radius: 4px;
+  overflow: hidden;
+  color: black;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 40px;
+  text-align: center;
+  padding: 0 10px;
+}
+.choose:hover {
+  background: #aadffd;
+  border-color: #78c3f3;
+  color: #004974;
+  text-decoration: none;
 }
 </style>
