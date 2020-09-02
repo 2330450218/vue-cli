@@ -1,10 +1,9 @@
 <template>
-<!-- 底部导航栏全局组件 -->
+  <!-- 底部导航栏全局组件 -->
   <div>
     <div class="bottom">
-       
       <div class="img">
-        <img style="width:160px" src="@/../public/img/image/2.png" alt />
+        <img style="width:160px" src="@/../public/img/image/3.png" alt />
       </div>
 
       <!-- elementui的组件 -->
@@ -52,19 +51,25 @@
 <style scoped>
 .bottom {
   width: 100%;
-  height: 228px;
+  height: 272px;
   background-color: #545c64;
   color: #fff;
   /* padding: 15px; */
   /* position: fixed;
   bottom: 0; */
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+  padding: 25px;
+  box-sizing: border-box;
 }
 .img,
 .bottom-span,
-.div-icon{
+.div-icon {
   margin: 0 auto;
 }
-.bottom-span{
+.bottom-span {
   margin: 10px;
 }
 .bottom-span span {
