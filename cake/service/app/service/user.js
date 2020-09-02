@@ -33,9 +33,9 @@ class UserService extends Service {
         }
     }
     // 注册
-    async register(name, pwd, birth) {
-        let sql = "insert into user(name,pwd,birth) values (?,?,?)";
-        let list = await this.ctx.app.mysql.query(sql, [name, pwd, birth]);
+    async register(name,pwd,address,phone,birth,isroot) {
+        let sql = "insert into user(name,pwd,address,phone,birth,isroot) values (?,?,?,?,?,?)";
+        let list = await this.ctx.app.mysql.query(sql, [name,pwd,address,phone,birth,isroot]);
         return list.affectedRows;
         //name为名字，pwd为账号，birth为生日
     }
@@ -45,12 +45,41 @@ class UserService extends Service {
         let list = await this.ctx.app.mysql.query(sql, [pwd, name]);
         return list.affectedRows;
     }
-    //展示用户信息
-    async showUsers(){
-        let sql="select * from user where isroot='0'"
-        let list=await this.ctx.app.mysql.query(sql)
+    //展示后台用户信息
+    async showUsers(pagenum, pagesize) {
+        let sql = `select *,(select count(1) from user where isroot='0') as count from user where isroot='0' limit ${pagesize*(pagenum-1)},${pagesize}`
+        let list = await this.ctx.app.mysql.query(sql, [pagenum, pagesize])
         return list
-    }                                                                                                                                                                                                                                                                                                     
+    } 
+    
+    //展示前端用户信息
+    async showviewUsers(){
+		let sql = "select *,(select count(1) from user where isroot='0') as count from user where isroot='0' ";
+		let list = await this.ctx.app.mysql.query(sql,[]);
+		return list;
+	}
+    
+    //展示管理员信息
+    async showAdministrators(pagenum, pagesize) {
+        let sql = `select *,(select count(1) from user where isroot='1') as count from user where isroot='1' limit ${pagesize*(pagenum-1)},${pagesize}`
+        // let sql = "select * from user where isroot='1'"
+        let list = await this.ctx.app.mysql.query(sql, [pagenum, pagesize])
+        return list
+    }
+
+    //展示前端管理员界面
+    async showviewAdministrators() {
+        let sql = "select *,(select count(1) from user where isroot='1') as count from user where isroot='1'" ;
+        let list = await this.ctx.app.mysql.query(sql, [])
+        return list;
+    }
+
+    //删除用户信息
+    async deleteUsers(id){
+        let sql = "delete from user where id=?";
+        let list = await this.ctx.app.mysql.query(sql,id);
+        return list.affectedRows;
+    }
 }
 
 module.exports = UserService;

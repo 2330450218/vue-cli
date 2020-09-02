@@ -1,8 +1,16 @@
 const Service = require('egg').Service;
 class labelService extends Service{
+    //查询后端所以lable
     async showLable(Goods_title,lable){
         let sql = "select lable  from lable where Goods_title=?";
         let list = await this.ctx.app.mysql.query(sql,[Goods_title,lable]);
+        return list;
+    }
+
+    // 查询前端所有lable
+    async showAlllable() {
+        let sql = "select  * from lable";
+        let list = await this.ctx.app.mysql.query(sql);
         return list;
     }
 
@@ -18,11 +26,12 @@ class labelService extends Service{
         return list.affectedRows;
     }
     
-    async deleteLable(Goods_title,lable){
-        let sql = "delete from lable where Goods_title=?";
-        let list = await this.ctx.app.mysql.query(sql,[Goods_title,lable])
+    async deleteLable(id){
+        let sql = "delete from lable where id=?";
+        let list = await this.ctx.app.mysql.query(sql,id)
         return list.affectedRows;
     }
+    
 
 
 }

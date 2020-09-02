@@ -2,10 +2,22 @@ const Service = require('egg').Service;
 const path = require("path");
 const fs = require("fs");
 class goodsService extends Service{
-    async showAllGoods(){
-        let sql = "select *  from goods";
-        let list = await this.ctx.app.mysql.query(sql,[]);
+    //展示后端所有商品
+    async showAllGoods(pagenum, pagesize) {
+        // let sql = "select *  from goods";
+        let sql = `select *,(select count(1) from goods) as count from goods limit ${pagesize*(pagenum-1)},${pagesize}`
+        let list = await this.ctx.app.mysql.query(sql, [pagenum, pagesize]);
         return list;
+    }
+    //展示前端所有商品
+    async showviewGoods(){
+        // let sql = `select * from goods where 1 `;
+        // if(obj.pagenum){
+        //     sql += `limit ${(obj.pagenum-1)*10},10`
+        // }
+        let sql = "select * from goods";
+        var result = await this.app.mysql.query(sql);
+        return result;
     }
 
     async uploadGoods() {

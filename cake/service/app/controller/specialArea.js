@@ -5,11 +5,21 @@ class specialAreaController extends Controller {
         let newUrl = await this.ctx.service.specialArea.getspecialArea();
         this.ctx.response.body = newUrl;
     }
-    // 展示锚点图片
+    // 展示后端锚点图片
     async showspecialArea() {
-        let list = await this.ctx.service.specialArea.showspecialArea();
+        let pagenum = this.ctx.request.query.pagenum;
+        let pagesize = this.ctx.request.query.pagesize;
+        let list = await this.ctx.service.specialArea.showspecialArea(pagenum, pagesize);
         this.ctx.response.body = list;
     }
+
+    // 展示前端锚点图片
+    async showviewspecialArea(){
+        let list = await this.ctx.service.specialArea.showviewspecialArea();
+        this.ctx.response.body = list;
+    }
+
+
     //删除锚点
     async deletespecialArea() {
         let id = this.ctx.request.query.id

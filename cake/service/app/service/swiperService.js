@@ -29,12 +29,18 @@ class swiperService extends Service{
 			return "http://localhost:7001/public/upload/1.png";
 		}
     }
-    async showAllSwiper(swiper_url){
-        let sql = "select swiper_url from swiper";
-        let list = await this.ctx.app.mysql.query(sql,[swiper_url]);
-        return list;
+	async showAllSwiper(pagenum, pagesize) {
+		let sql = `select *,(select count(1) from swiper) as count from swiper  limit ${pagesize*(pagenum-1)},${pagesize}`
+		let list = await this.ctx.app.mysql.query(sql, [pagenum, pagesize]);
+		return list;
 	}
 	
+	async showviewSwiper(){
+		let sql = "select * from swiper";
+		let list = await this.ctx.app.mysql.query(sql,[]);
+		return list;
+	}
+
 	async deleteSwiper(id){
 		// const sql = "delete a from swiper a,(select max(id) id from swiper) b  where a.id = b.id";
 		const sql = "delete  from swiper where id=?"

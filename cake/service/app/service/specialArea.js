@@ -25,12 +25,20 @@ class SwiperService extends Service {
             alert("上传失败")
         }
     }
-    // 获取锚点图片
-    async showspecialArea() {
-        const sql = "select * from special_area";
-        let list = await this.ctx.app.mysql.query(sql, []);
+    // 获取后端锚点图片
+    async showspecialArea(pagenum, pagesize) {
+        let sql = `select *,(select count(1) from special_area) as count from special_area limit ${pagesize*(pagenum-1)},${pagesize}`
+        let list = await this.ctx.app.mysql.query(sql, [pagenum, pagesize]);
         return list;
     }
+
+    //获取前端锚点
+    async showviewspecialArea(){
+		let sql = "select * from special_area"
+		let list = await this.ctx.app.mysql.query(sql,[]);
+		return list;
+	}
+
     // 删除锚点图片
     async deletespecialArea(id) {
         const sql = "delete from special_area where id = ?";

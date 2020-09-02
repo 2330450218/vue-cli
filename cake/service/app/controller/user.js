@@ -15,8 +15,11 @@ class UserController extends Controller {
     async register() {
         let name = this.ctx.request.body.name;
         let pwd = this.ctx.request.body.pwd;
+        let address = this.ctx.request.body.address;
+        let phone = this.ctx.request.body.phone;
         let birth = this.ctx.request.body.birth;
-        let list = await this.ctx.service.user.register(name, pwd, birth);
+        let isroot = this.ctx.request.body.isroot;
+        let list = await this.ctx.service.user.register(name,pwd,address,phone,birth,isroot);
         this.ctx.response.body = list;
     }
 
@@ -26,9 +29,36 @@ class UserController extends Controller {
 		let list = await this.ctx.service.user.changePwd(name, pwd);
 		this.ctx.response.body = list;
     }
-    async showUsers(){
-        let list=await this.ctx.service.user.showUsers();
-        this.ctx.response.body=list;
+    //展示后端用户
+    async showUsers() {
+        let pagenum = this.ctx.request.query.pagenum;
+        let pagesize = this.ctx.request.query.pagesize;
+        let list = await this.ctx.service.user.showUsers(pagenum, pagesize);
+        this.ctx.response.body = list;
+    }
+
+    //展示前端用户
+     async showviewUsers(){
+        let list = await this.ctx.service.user.showviewUsers();
+        this.ctx.response.body = list;
+     }
+
+    //展示后端管理员
+    async showAdministrators() {
+        let pagenum = this.ctx.request.query.pagenum;
+        let pagesize = this.ctx.request.query.pagesize;
+        let list = await this.ctx.service.user.showAdministrators(pagenum, pagesize);
+        this.ctx.response.body = list;
+    }
+    //展示前端管理员
+    async showviewAdministrators(){
+        let list = await this.ctx.service.user.showviewAdministrators();
+        this.ctx.response.body = list;
+    }
+    async deleteUsers(){
+        let id = this.ctx.request.query.id;
+        let list = await this.ctx.service.user.deleteUsers(id);
+        this.ctx.response.body = list;
     }
 }
 
