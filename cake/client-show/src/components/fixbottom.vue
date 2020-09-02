@@ -1,9 +1,9 @@
 <template>
-  <!-- 底部导航栏全局组件 -->
   <div>
     <div class="bottom">
+      <!-- 给图片用一个盒子包起来 -->
       <div class="img">
-        <img style="width:160px" src="@/../public/img/image/3.jpg" alt />
+        <img style="width:160px" src="@/../public/img/image/2.png" alt />
       </div>
 
       <!-- elementui的组件 -->
@@ -50,20 +50,9 @@
 
 <style scoped>
 .bottom {
-  width: 100%;
-  height: 272px;
-  background-color: #545c64;
+  background-color: #333333;
   color: #fff;
-  text-align: center;
-  /* padding: 15px; */
-  /* position: fixed;
-  bottom: 0; */
-  display: flex;
-
-  flex-direction: column;
-  align-items: center;
   padding: 25px;
-  box-sizing: border-box;
 }
 .img,
 .bottom-span,
