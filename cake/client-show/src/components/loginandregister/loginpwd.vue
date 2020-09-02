@@ -1,8 +1,9 @@
 <template>
   <div class="loginbox">
-    <el-input v-model="input" placeholder="请输入您的账号"></el-input>
+    <el-input v-model="pnumber" placeholder="请输入您的账号"></el-input>
     <el-input placeholder="请输入密码" v-model="pwd" show-password></el-input>
-    <el-button type="primary">登录</el-button>
+    <span class="tip">{{tips}}</span>
+    <el-button type="primary" @click="userlogin">登录</el-button>
     <div class="smallbeizhu">
       <el-checkbox v-model="checked">记住密码</el-checkbox>
       <div>
@@ -17,17 +18,57 @@
 export default {
   data() {
     return {
-      input: "",
+      pnumber: "",
       pwd: "",
       checked: true,
+      tips: "",
     };
   },
-  
+  watch: {
+    pnumber() {
+      let reg = /^1[3-9]\d{9}$/;
+      if (reg.test(this.pnumber)) {
+        this.tips = "";
+      } else {
+        this.tips = "账号格式不符，请输入手机号码格式";
+      }
+    },
+  },
+
+  // 这里需要与
+  methods: {
+    userlogin() {
+      //发起网络请求
+      if (this.tips == "") {
+        // 添加后端服务器的路由
+        this.$http
+          .post("/#", {
+            pnumber: this.pnumber,
+            pwd: this.pwd,
+          })
+          .then((res) => {
+            console.log(res.data);
+            //根据服务器请求数据判断
+            if (res.data.status == 0) {
+              this.tips = "账号或密码错误";
+              console.log("登录失败");
+            } else {
+              console.log("登陆成功");
+              addCookie(this.pnumber);
+            }
+          });
+      }
+    },
+  },
+  addCookie(pnumber) {
+    document.cookie = `pnumber=${pnumber}`;
+  },
 };
 </script>
 
 <style>
-.loginbox input,button {
+.loginbox input,
+button {
   border-radius: 2px;
 }
 .loginbox {
@@ -38,6 +79,7 @@ export default {
   flex-direction: column;
   padding-top: 24px;
   margin: 0 auto;
+  position: relative;
 }
 .el-input--suffix .el-input__inner {
   margin-top: 10px;
@@ -102,5 +144,12 @@ button.el-button--primary>span  {
 }
 .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #684029;
+}
+.tip {
+    color: red;
+    font-size: 12px;
+    position: absolute;
+    top: 129px;
+    left: 4px;
 }
 </style>

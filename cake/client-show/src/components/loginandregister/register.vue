@@ -3,7 +3,7 @@
     <span>用户注册</span>
 
     <div class="registerbox">
-      <el-input v-model="input" placeholder="请输入您的手机号"></el-input>
+      <el-input v-model="pnumber" placeholder="请输入您的手机号"></el-input>
       <el-input placeholder="密码：请输入8~20字符，需同时包含英文和数字" v-model="pwd" show-password></el-input>
       <el-input placeholder="确认密码" v-model="pwd" show-password></el-input>
       <div class="yanzheng">
@@ -11,8 +11,9 @@
         <el-button type="info" plain>获取验证码</el-button>
       </div>
       <el-date-picker v-model="value1" type="date" placeholder="选择日期"></el-date-picker>
+      <span class="tips">{{tips}}</span>
 
-      <el-button type="primary" class="btn-zhuce">注册</el-button>
+      <el-button type="primary" class="btn-zhuce" @click="useradd">注册</el-button>
     </div>
   </div>
 </template>
@@ -21,7 +22,7 @@
 export default {
   data() {
     return {
-      input: "",
+      pnumber: "",
       pwd: "",
       pickerOptions: {
         disabledDate(time) {
@@ -29,20 +30,63 @@ export default {
         },
       },
       value1: "",
+      tips: "1111",
     };
+  },
+  watch: {
+    pnumber() {
+      let reg = /^1[3-9]\d{9}$/;
+      if (reg.test(this.pnumber)) {
+        this.tips = "";
+      } else {
+        this.tips = "账号格式不符，请输入手机号码格式";
+      }
+    },
+    pwd() {
+      let reg = /^[0-9A-Za-z]{8,20}$/;
+      if (reg.test(this.pwd)) {
+        this.tips = "";
+      } else {
+        this.tips = "密码格式不符合";
+      }
+    },
+  },
+  methods: {
+    useradd() {
+      //发起网络请求
+      // 当没有提示错误并且有出生日期时才能进行请求
+      if (this.tips == "" && this.value1) {
+        // 添加后端服务器的路由
+        this.$http.post("/#", {
+            pnumber: this.pnumber,
+            pwd: this.pwd,
+          })
+          .then((res) => {
+            // 根据后台返回数据判断
+            console.log(res.data);
+            // if (res.data == 1) {
+            //   console.log("注册失败");
+            // } else {
+            //   console.log("注册成功");
+            // }
+            
+          });
+      }
+    },
+
   },
 };
 </script>
 
 
 <style >
-
 .register {
   width: 388px;
   height: 407px;
   border: 1px solid #ccc;
   padding: 28px 42px;
   box-sizing: border-box;
+  position: relative;
 }
 .register > span {
   font-size: 20px;
@@ -65,9 +109,7 @@ button {
   border-color: #442818;
   color: #fff;
 }
-.el-button--primary.btn-zhuce {
-  margin-top: 15px;
-}
+
 .el-button--primary {
   color: #fff;
   background-color: #442818;
@@ -107,5 +149,12 @@ button {
   left: 5px;
   top: 6px;
   transition: all 0.3s;
+}
+.tips {
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  top: 333px;
+  left: 45px;
 }
 </style>
