@@ -21,7 +21,7 @@ Vue.component("fixbottom",fixbottom)
 Vue.use(ElementUI)
 
 //配置默认请求地址
-axios.defaults.baseURL = 'https://127.0.0.1:7001';
+axios.defaults.baseURL = 'http://localhost:7001';
 Vue.prototype.$http = axios
 
 
@@ -30,6 +30,8 @@ Vue.prototype.$http = axios
 new Vue({
   router,
   store,
- 
+  methods:{
+    
+  },
   render: h => h(App)
 }).$mount('#app')

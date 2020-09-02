@@ -5,21 +5,66 @@
       :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
       border
       style="width: 100%"
+      ref="multipleTable"
+      max-height="403"
+      @selection-change="handleSelectionChange"
+      @cell-dblclick="changeEditable"
+      :row-key="tableId"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column fixed prop="id" label="id" width="150"></el-table-column>
-      <el-table-column prop="name" label="名称" width="120"></el-table-column>
-      <el-table-column prop="goods_url" label="资源地址" width="300"></el-table-column>
-      <el-table-column prop="price" label="价格" width="120"></el-table-column>
-      <el-table-column prop="category" label="介绍" width="300"></el-table-column>
-      <el-table-column prop="weight" label="分量" width="120"></el-table-column>
-      <el-table-column align="center" width="300">
+      <el-table-column fixed prop="id" label="id" width="55"></el-table-column>
+      <el-table-column label="名称" width="120">
+        <!-- prop="name" -->
+        <template slot-scope="scope">
+          <div
+            :contenteditable="iseditable"
+            @blur="loseBlur($event,scope.row,bid='1')"
+          >{{scope.row.name}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="资源地址" width="400">
+        <!-- prop="goods_url"  -->
+        <template slot-scope="scope">
+          <div
+            :contenteditable="iseditable"
+            @blur="loseBlur($event,scope.row,bid='2')"
+          >{{scope.row.goods_url}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="价格" width="80">
+        <!-- prop="price" -->
+        <template slot-scope="scope">
+          <div
+            :contenteditable="iseditable"
+            @blur="loseBlur($event,scope.row,bid='3')"
+          >{{scope.row.price}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="介绍" width="300">
+        <!-- prop="category" -->
+        <template slot-scope="scope">
+          <div
+            :contenteditable="iseditable"
+            @blur="loseBlur($event,scope.row,bid='4')"
+          >{{scope.row.category}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="分量" width="120">
+        <!-- prop="weight" -->
+        <template slot-scope="scope">
+          <div
+            :contenteditable="iseditable"
+            @blur="loseBlur($event,scope.row,bid='5')"
+          >{{scope.row.weight}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="300" fixed="right">
         <template slot="header">
           <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
         </template>
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-          <el-button @click="deleteGoods(scope.row)" type="text" size="small">删除</el-button>
+          <el-button @click="updateGoods(scope.row)" type="text" size="small">修改</el-button>
+          <el-button @click="deleteGoods(scope.row,scope.$index)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -28,14 +73,15 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage4"
-        :page-sizes="[5, 10, 15, 20]"
+        :page-sizes="[5, 10]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="100"
+        :total="Number(totallength)"
         style="margin:10px 20px;width:80%;float:left"
       ></el-pagination>
       <el-button type="primary" plain style="float:left;margin:10px auto;" @click="toaddPage">添加新的记录</el-button>
     </div>
+    <!-- 模态弹窗 -->
     <div v-if="ischecked" class="modal" @click.self="returnPage">
       <div class="addmodal">
         <div class="addform">
@@ -55,17 +101,16 @@
             <el-form-item label="分量">
               <el-input v-model="sizeForm.weight" id="weight"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="商品id">
-              <el-input v-model="sizeForm.goods_id" id="goods_id"></el-input>
-            </el-form-item> -->
+            
           </el-form>
           <div class="btn">
             <el-button type="primary" @click="addgoods">确认添加</el-button>
             <!-- <el-button type="primary"> -->
-            <a href="javascript:;" class="choose">选择文件
-          <input type="file" name="" id="file">
-      </a>
-      <!-- </el-button> -->
+            <a href="javascript:;" class="choose">
+              选择文件
+              <input type="file" name id="file" />
+            </a>
+            <!-- </el-button> -->
             <el-button type="primary" @click="toreset">重置</el-button>
           </div>
         </div>
@@ -78,9 +123,17 @@
 export default {
   data() {
     return {
+      iseditable: "false",
+      //页码
       pagenum: "1",
+      //条数
       pagesize: "5",
-      ischecked: "",
+      // 数据获取长度
+      totallength: "",
+
+      multipleSelection: [],
+
+      ischecked: false,
       search: "",
       sizeForm: {
         name: "",
@@ -90,48 +143,16 @@ export default {
         category: "",
         url: "",
       },
-      tableData: [
-        // {
-        //   date: "2016-05-03",
-        //   name: "王小虎",
-        //   province: "上海",
-        //   city: "普陀区",
-        //   address: "上海市普陀区金沙江路 1518 弄",
-        //   zip: 200333,
-        // },
-        {
-          id: "2016-05-02",
-          name: "小面包",
-          url: "图片地址",
-          price: "价格",
-          category: " 介绍",
-          weight: "重量",
-        },
+      tableData: [],
 
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-      ],
-      // currentPage1: 5,
-      // currentPage2: 5,
-      // currentPage3: 5,
       currentPage4: 1,
     };
   },
   methods: {
+     //获取当前行唯一id
+    tableId(row){
+      return row.individualId
+    },
     //展示商品
     showAllGoods() {
       this.$http
@@ -144,13 +165,37 @@ export default {
         .then((r) => {
           console.log(r.data);
           this.tableData = r.data;
+          this.totallength=r.data[0].count
         })
         .catch();
     },
-
+    //点击可编辑
+    changeEditable() {
+      this.iseditable = this.iseditable == "false" ? "true" : "false";
+    },
+    //失去焦点
+    loseBlur(event, rows, bid) {
+      switch (bid) {
+        case "1":
+          rows.name = event.target.innerHTML;
+          break;
+        case "2":
+          rows.goods_url = event.target.innerHTML;
+          break;
+        case "3":
+          rows.price = event.target.innerHTML;
+          break;
+        case "4":
+          rows.category = event.target.innerHTML;
+          break;
+        case "5":
+          rows.weight = event.target.innerHTML;
+          break;
+      }
+    },
     //增加商品
     addgoods() {
-      console.log(111)
+      console.log(111);
       let name = document.getElementById("name").value;
       let price = document.getElementById("price").value;
       let category = document.getElementById("category").value;
@@ -173,7 +218,7 @@ export default {
       this.$http
         .post("http://127.0.0.1:7001/uploadGoods", formData, config)
         .then((res) => {
-          console.log("数据库上传成功")
+          console.log("数据库上传成功");
           // this.showGoods();
           // this.$router.go(0)
           //  document.getElementsByClassName("newImg").src = res.data;
@@ -185,7 +230,7 @@ export default {
     },
 
     //删除商品
-    deleteGoods(row) {
+    deleteGoods(row,index) {
       var id = row.id;
       console.log(id);
       this.$http
@@ -195,8 +240,8 @@ export default {
           },
         })
         .then((res) => {
-          console.log("数据库删除成功");
-          this.$router.go(0);
+          // 删除当前行
+          this.tableData.splice(index,1)
         })
         .catch((err) => {});
     },
@@ -218,9 +263,15 @@ export default {
       this.sizeForm.category = "";
       this.sizeForm.url = "";
     },
-    //添加管理员
-    addroot() {
-      console.log("添加成功");
+    //更新商品信息
+    updateGoods(rows){
+      this.$http.post("/updateGoods",{
+        id:rows.id,
+        name:rows.name,
+        price:rows.price,
+        category:rows.category,
+        weight:rows.weight,
+      }).then().catch()
     },
     toggleSelection(rows) {
       if (rows) {
@@ -280,7 +331,7 @@ export default {
 }
 .el-button .el-button--primary {
   width: 100px;
-  height: 40px!important;
+  height: 40px !important;
 }
 .btn {
   width: 250px;
@@ -312,7 +363,7 @@ a.choose {
   width: 120px;
   height: 40px;
   display: inline-block;
-  background: #409EFF;
+  background: #409eff;
   /* border: 1px solid #99d3f5; */
   border-radius: 4px;
   overflow: hidden;

@@ -52,9 +52,9 @@ class goodsService extends Service{
 		}
     }
 
-    async updateGoods(id,name,price){
-        let sql = "update goods set price=?,name=?,category=?,goods_url,weight=?, where id=?";
-        let list = await this.ctx.app.mysql.query(sql,[price,name,category,goods_url,weight,id]);
+    async updateGoods(id,name,price,category,weight){
+        let sql = "update goods set price=?,name=?,category=?,weight=? where id=?";
+        let list = await this.ctx.app.mysql.query(sql,[price,name,category,weight,id]);
         return list.affectedRows;
     }
     

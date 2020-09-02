@@ -55,6 +55,7 @@
   height: 228px;
   background-color: #545c64;
   color: #fff;
+  text-align: center;
   /* padding: 15px; */
   /* position: fixed;
   bottom: 0; */
