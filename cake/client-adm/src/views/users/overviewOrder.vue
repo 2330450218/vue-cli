@@ -112,6 +112,10 @@ export default {
     };
   },
   methods: {
+     //获取当前行唯一id
+    tableId(row){
+      return row.individualId
+    },
      //模态弹窗事件
     toaddPage() {
       this.ischecked = true;

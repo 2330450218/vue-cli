@@ -10,7 +10,7 @@ class goodsController extends Controller {
         let c = await this.ctx.service.goodsService.showAllGoods(pagenum, pagesize);
         this.ctx.response.body = c;
     }
-    async uploadGoods() {
+    async uploadGoods(){
         // let name = this.ctx.request.body.name;
         // let price = this.ctx.request.body.price;
         // let goods_url = this.ctx.request.body.goods_url;
@@ -19,20 +19,19 @@ class goodsController extends Controller {
         let newUrl = await this.ctx.service.goodsService.uploadGoods();
         this.ctx.response.body = newUrl;
     }
-    async deleteGoods() {
+    async deleteGoods(){
         let id = this.ctx.request.query.id;
         let list = await this.ctx.service.goodsService.deleteGoods(id);
         this.ctx.response.body = list;
     }
-
-    async updateGoods() {
+    
+    async updateGoods(){
         let id = this.ctx.request.body.id;
         let name = this.ctx.request.body.name;
         let price = this.ctx.request.body.price;
-        let goods_url = this.ctx.request.body.goods_url;
         let category = this.ctx.request.body.category;
         let weight = this.ctx.request.body.weight;
-        let list = await this.ctx.service.goodsService.updateGoods(id, name, price, goods_url, category, weight);
+        let list = await this.ctx.service.goodsService.updateGoods(id,name,price,category);
         this.ctx.response.body = list;
     }
 }

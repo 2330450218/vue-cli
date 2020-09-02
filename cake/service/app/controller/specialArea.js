@@ -18,8 +18,6 @@ class specialAreaController extends Controller {
         let list = await this.ctx.service.specialArea.showviewspecialArea();
         this.ctx.response.body = list;
     }
-
-
     //删除锚点
     async deletespecialArea() {
         let id = this.ctx.request.query.id

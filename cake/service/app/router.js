@@ -18,7 +18,6 @@ module.exports=app=>{
     //查询前端所有lable
     router.get("/showAlllable", controller.lableController.showAlllable)
 
-
     //商品
     //展示前端所有商品
     router.get("/showviewGoods",controller.goodsController.showviewGoods)
@@ -45,10 +44,10 @@ module.exports=app=>{
     router.get('/showAdministrators', controller.user.showAdministrators);
     //展示前端管理员界面
     router.get('/showviewAdministrators', controller.user.showviewAdministrators);
+    //后台修改用户信息
+    router.post('/updateUser', controller.user.updateUser);
     //删除用户信息
     router.get("/deleteUsers",controller.user.deleteUsers);
-
-
     // 专区锚点
     // 获取锚点图片
     router.post('/getspecialArea', controller.specialArea.getspecialArea);

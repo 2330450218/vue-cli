@@ -1,9 +1,10 @@
 const Service = require('egg').Service;
 class labelService extends Service{
     //查询后端所以lable
-    async showLable(Goods_title,lable){
-        let sql = "select lable  from lable where Goods_title=?";
-        let list = await this.ctx.app.mysql.query(sql,[Goods_title,lable]);
+    async showLable(pagenum,pagesize){
+        // let sql = "select *  from lable where Goods_title=?";
+        let sql = `select *,(select count(1) from lable) as count from lable limit ${pagesize*(pagenum-1)},${pagesize}`
+        let list = await this.ctx.app.mysql.query(sql,[pagenum,pagesize]);
         return list;
     }
 
@@ -20,9 +21,9 @@ class labelService extends Service{
         return list;
     }
 
-    async updateLable(Goods_title,lable){
-        let sql = "update lable set lable=? where Goods_title=?";
-        let list = await this.ctx.app.mysql.query(sql,[name,lable]);
+    async updateLable(Goods_title,lable,id){
+        let sql = "update lable set goods_title=?,lable=? where id=?";
+        let list = await this.ctx.app.mysql.query(sql,[Goods_title,lable,id]);
         return list.affectedRows;
     }
     

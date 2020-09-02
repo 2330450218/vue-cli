@@ -15,7 +15,6 @@ class swiperController extends Controller{
         let list = await this.ctx.service.swiperService.showviewSwiper();
         this.ctx.response.body = list;
     }
-
     async deleteSwiper(){
         let id = this.ctx.request.query.id;
         let list = await this.ctx.service.swiperService.deleteSwiper(id);

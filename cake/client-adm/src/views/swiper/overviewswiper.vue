@@ -2,10 +2,22 @@
 <!-- 轮播图管理--需要进一步修改 -->
   <div>
     <el-table :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-      border style="width: 100%">
+      border style="width: 100%"
+      ref="multipleTable"
+      max-height="403"
+      @selection-change="handleSelectionChange"
+      @cell-dblclick="changeEditable"
+      :row-key="tableId"
+      >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column fixed prop="id" label="id" width="150"></el-table-column>
-      <el-table-column prop="swiper_url" label="资源路径" width="300"></el-table-column>
+      <el-table-column fixed prop="id" label="id" width="55"></el-table-column>
+     
+      <el-table-column label="资源路径" width="400">
+        <!-- prop="swiper_url" -->
+        <template slot-scope="scope">
+          <div :contenteditable="iseditable"  @blur="loseBlur($event,scope.row,bid='1')"  >{{scope.row.swiper_url}}</div>
+        </template>
+      </el-table-column>
       <el-table-column  align="center" width="300">
         <template slot="header" >
         <el-input
@@ -14,8 +26,8 @@
           placeholder="输入关键字搜索"/>
       </template>
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-          <el-button @click="deleteSwiper(scope.row)" type="text" size="small">删除</el-button>
+          
+          <el-button @click="deleteSwiper(scope.row,scope.$index)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -27,7 +39,7 @@
         :page-sizes="[5, 10]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="100"
+        :total="Number(totallength)"
         style="margin:10px 20px;width:80%;float:left"
       ></el-pagination>
       <el-button type="primary" plain style="float:left;margin:10px auto;" @click="toaddPage">添加新的记录</el-button>
@@ -61,10 +73,18 @@
 export default {
   data() {
     return {
+      iseditable: "false",
+      //页码
       pagenum: "1",
+      //条数
       pagesize: "5",
-      ischecked:"",
-      search:"",
+      // 数据获取长度
+      totallength: "",
+     
+      multipleSelection: [],
+      users: [],
+      ischecked: false,
+      search: "",
       sizeForm: {
         name: "",
         classify:""
@@ -83,6 +103,10 @@ export default {
     this.showAllSwiper();
   },
   methods: {
+     //获取当前行唯一id
+    tableId(row){
+      return row.individualId
+    },
     //展示轮播图
     showAllSwiper() {
       this.$http
@@ -95,11 +119,22 @@ export default {
         .then((r) => {
           console.log(r.data);
           this.tableData = r.data;
+          this.totallength=r.data[0].count
         })
         .catch();
     },
 
-    
+    //点击可编辑
+    changeEditable() {
+      console.log(12);
+      this.iseditable = this.iseditable == "false" ? "true" : "false";
+    },
+    //失去焦点
+    loseBlur(event,rows,bid){
+      switch(bid){
+        case '1': rows.swiper_url=event.target.innerHTML;break;
+      }
+    },
 
     //模态弹窗事件
     toaddPage() {
@@ -141,7 +176,7 @@ export default {
     },
 
     //删除商品
-    deleteSwiper(row) {
+    deleteSwiper(row,index) {
       var id = row.id;
       console.log(id);
       this.$http
@@ -151,12 +186,11 @@ export default {
           },
         })
         .then((res) => {
-          console.log("数据库删除成功");
-          this.$router.go(0);
+           // 删除当前行
+          this.tableData.splice(index,1)
         })
         .catch((err) => {});
     },
-
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -182,7 +216,6 @@ export default {
       console.log(this.pagenum);
       this.showAllSwiper();
     },
-
   },
 };
 </script>
