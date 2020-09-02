@@ -1,8 +1,6 @@
 <template>
   <div>
-    <nav>
-      顶部导航栏
-    </nav>
+    <mtheader></mtheader>
     <div class="bg-content">
       <div class="login-po">
         <login></login>
@@ -28,9 +26,9 @@ export default {
 </script>
 
 <style>
-nav {
+/* nav {
   background-color: #3a907a;
-}
+} */
 .bg-content {
   width: 100%;
   height: 527px;

@@ -1,6 +1,6 @@
 <template>
   <div>
-<nav>顶部导航栏</nav>
+    <mtheader></mtheader>
     <div class="bg-content">
         <div class="login-po">
             <register></register>
@@ -39,7 +39,7 @@ nav{
 .login-po{
     position: absolute;
     right: 100px;
-    top: 114px;
+    top: 30px;
     background-color: #fff;
 }
 </style>
