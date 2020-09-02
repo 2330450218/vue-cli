@@ -3,7 +3,7 @@
   <div>
     <div class="bottom">
       <div class="img">
-        <img style="width:160px" src="@/../public/img/image/3.png" alt />
+        <img style="width:160px" src="@/../public/img/image/3.jpg" alt />
       </div>
 
       <!-- elementui的组件 -->
