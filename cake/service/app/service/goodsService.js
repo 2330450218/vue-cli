@@ -2,7 +2,7 @@ const Service = require('egg').Service;
 const path = require("path");
 const fs = require("fs");
 class goodsService extends Service{
-    //展示后端所有商品
+    //展示后端所有商品和前端分页商品
     async showAllGoods(pagenum, pagesize) {
         // let sql = "select *  from goods";
         let sql = `select *,(select count(1) from goods) as count from goods limit ${pagesize*(pagenum-1)},${pagesize}`
@@ -20,9 +20,10 @@ class goodsService extends Service{
         return result;
     }
 
+
     async uploadGoods() {
 		const file = this.ctx.request.files[0];
-		const toFileName = '/public/upload'+Date.now()+file.filename;
+		const toFileName = '/public/upload1/'+Date.now()+file.filename;
 		/**
 		 * 1,全局变量__dirname的值为"<路径>\项目名\app\service",即为当前文件所在的目录
 		 * 2,path.dirname(...)的使用是去掉最后一级,
@@ -48,13 +49,13 @@ class goodsService extends Service{
 		if(r.affectedRows==1) {
 			return newUrl;
 		}else {
-			return "http://localhost:7001/public/upload/1.png";
+			return "http://localhost:7001/public/upload1/1.png";
 		}
     }
 
-    async updateGoods(id,name,price,category,weight){
-        let sql = "update goods set price=?,name=?,category=?,weight=? where id=?";
-        let list = await this.ctx.app.mysql.query(sql,[price,name,category,weight,id]);
+    async updateGoods(id,name,price){
+        let sql = "update goods set price=?,name=?,category=?,goods_url,weight=?, where id=?";
+        let list = await this.ctx.app.mysql.query(sql,[price,name,category,goods_url,weight,id]);
         return list.affectedRows;
     }
     

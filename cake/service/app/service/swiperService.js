@@ -4,7 +4,7 @@ const fs = require("fs");
 class swiperService extends Service{
     async uploadSwiper() {
 		const file = this.ctx.request.files[0];
-		const toFileName = '/public/upload/'+Date.now()+file.filename;
+		const toFileName = '/public/upload2/'+Date.now()+file.filename;
 		/**
 		 * 1,全局变量__dirname的值为"<路径>\项目名\app\service",即为当前文件所在的目录
 		 * 2,path.dirname(...)的使用是去掉最后一级,
@@ -26,7 +26,7 @@ class swiperService extends Service{
 		if(r.affectedRows==1) {
 			return newUrl;
 		}else {
-			return "http://localhost:7001/public/upload/1.png";
+			return "http://localhost:7001/public/upload2/轮播图1.png";
 		}
     }
 	async showAllSwiper(pagenum, pagesize) {

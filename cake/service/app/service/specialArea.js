@@ -5,7 +5,7 @@ class SwiperService extends Service {
     // 上传锚点图片
     async getspecialArea() {
         const file = this.ctx.request.files[0];
-        const toFileName = '/public/upload/' + Date.now() + file.filename;
+        const toFileName = '/public/upload3/' + Date.now() + file.filename;
         let to = path.dirname(__dirname) + toFileName;
         //file.filepath是上传的临时文件
         //把临时文件写入到文件to
