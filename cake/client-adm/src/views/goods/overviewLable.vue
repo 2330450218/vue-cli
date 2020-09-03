@@ -145,11 +145,9 @@ export default {
     },
     //添加标签
     addLable(){
-      let name = document.getElementById("name").value;
-      let Goods_title = document.getElementById("Goods_title").value;
       this.$http.post("http://127.0.0.1:7001/addLable",{
-          lable:name,
-          Goods_title:Goods_title
+        lable:this.sizeForm.name,
+        Goods_title:this.sizeForm.Goods_title
       }).then(res=>{
           console.log('数据库添加成功')
       }).catch(err=>{

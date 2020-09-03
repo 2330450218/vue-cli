@@ -190,7 +190,22 @@ export default {
       this.sizeForm.birth = "";
       this.sizeForm.pwd = "";
     },
-    
+
+    //添加管理员
+    addroot(){
+      this.$http.post("http://127.0.0.1:7001/register",{
+            name:this.sizeForm.name,
+            password:this.sizeForm.pwd,
+            phone:this.sizeForm.phone,
+            birth:this.sizeForm.birth,
+            isroot:this.sizeForm.isroot
+      }).then(res=>{
+          console.log('数据库添加成功')
+          showAdministrators()
+      }).catch(err=>{
+
+      })
+    },
 
     //删除用户
       deleteUser(row,index){

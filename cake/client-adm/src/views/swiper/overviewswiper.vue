@@ -153,7 +153,6 @@ export default {
     addSwiper() {
       console.log(111)
       let file = document.getElementById("file").files[0];
-      console.log(file);
       let formData = new FormData();
       formData.append("uploadGoods", file, file.name);
       const config = {

@@ -90,7 +90,7 @@
               <el-input v-model="sizeForm.name" id="name"></el-input>
             </el-form-item>
             <el-form-item label="类别">
-              <el-input v-model="sizeForm.classify" id="goods_id"></el-input>
+              <el-input v-model="sizeForm.goods_id" id="goods_id"></el-input>
             </el-form-item>
             <el-form-item label="价格">
               <el-input v-model="sizeForm.price" id="price"></el-input>
@@ -196,19 +196,13 @@ export default {
     //增加商品
     addgoods() {
       console.log(111);
-      let name = document.getElementById("name").value;
-      let price = document.getElementById("price").value;
-      let category = document.getElementById("category").value;
-      let weight = document.getElementById("weight").value;
-      let goods_id = document.getElementById("goods_id").value;
       let file = document.getElementById("file").files[0];
-      console.log(name, price, category, weight, file);
       let formData = new FormData();
-      formData.append("name", name);
-      formData.append("price", price);
-      formData.append("category", category);
-      formData.append("weight", weight);
-      formData.append("goods_id", goods_id);
+      formData.append("name", this.sizeForm.name);
+      formData.append("price", this.sizeForm.price);
+      formData.append("category", this.sizeForm.category);
+      formData.append("weight", this.sizeForm.weight);
+      formData.append("goods_id", this.sizeForm.goods_id);
       formData.append("uploadGoods", file, file.name);
       const config = {
         headers: {
@@ -219,10 +213,7 @@ export default {
         .post("http://127.0.0.1:7001/uploadGoods", formData, config)
         .then((res) => {
           console.log("数据库上传成功");
-          // this.showGoods();
-          // this.$router.go(0)
-          //  document.getElementsByClassName("newImg").src = res.data;
-          //  showAllSwiper();
+         showAllGoods()
         })
         .catch((err) => {
           // console.log(err)

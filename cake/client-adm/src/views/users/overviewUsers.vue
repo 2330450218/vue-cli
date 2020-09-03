@@ -141,7 +141,7 @@ export default {
     },
     // 添加用户信息
     adduser(){
-      this.$http.post("/register",{
+      this.$http.post("http://127.0.0.1:7001/register",{
        name: this.sizeForm.name,
         phone: this.sizeForm.phone,
         address: this.sizeForm.address,
