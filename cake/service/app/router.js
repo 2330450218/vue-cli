@@ -32,8 +32,11 @@ module.exports=app=>{
     // 登录注册
     // 登录
     router.post('/login', controller.user.login);
-    // 注册
+    // 注册后端
     router.post('/register', controller.user.register);
+    // 注册前端
+    router.post('/registerQian', controller.user.registerQian);
+
     // 根据name修改密码
     router.post('/changePwd', controller.user.changePwd);
     // 展示后端用户界面
@@ -58,4 +61,10 @@ module.exports=app=>{
     //展示前端锚图片
     router.get('/showviewspecialArea', controller.specialArea.showviewspecialArea);
 
+
+    // 订单
+    // 后台展示订单信息
+    router.get("/showorder",controller.order.showOrder)
+    //删除订单
+    router.get("/deleteorder",controller.order.deleteOrder)
 }

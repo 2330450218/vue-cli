@@ -193,7 +193,7 @@ export default {
 
     //添加管理员
     addroot(){
-      this.$http.post("http://127.0.0.1:7001/register",{
+      this.$http.post("/register",{
             name:this.sizeForm.name,
             password:this.sizeForm.pwd,
             phone:this.sizeForm.phone,
@@ -206,12 +206,11 @@ export default {
 
       })
     },
-
     //删除用户
       deleteUser(row,index){
       var id = row.id;
       console.log(id)
-      this.$http.get("http://127.0.0.1:7001/deleteUsers",{
+      this.$http.get("/deleteUsers",{
         params:{
           id:id
         }

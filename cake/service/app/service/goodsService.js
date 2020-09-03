@@ -2,7 +2,7 @@ const Service = require('egg').Service;
 const path = require("path");
 const fs = require("fs");
 class goodsService extends Service{
-    //展示后端所有商品和前端分页商品
+    //展示后端所有商品
     async showAllGoods(pagenum, pagesize) {
         // let sql = "select *  from goods";
         let sql = `select *,(select count(1) from goods) as count from goods limit ${pagesize*(pagenum-1)},${pagesize}`
@@ -19,7 +19,6 @@ class goodsService extends Service{
         var result = await this.app.mysql.query(sql);
         return result;
     }
-
 
     async uploadGoods() {
 		const file = this.ctx.request.files[0];
@@ -53,9 +52,9 @@ class goodsService extends Service{
 		}
     }
 
-    async updateGoods(id,name,price){
-        let sql = "update goods set price=?,name=?,category=?,goods_url,weight=?, where id=?";
-        let list = await this.ctx.app.mysql.query(sql,[price,name,category,goods_url,weight,id]);
+    async updateGoods(id,name,price,category,weight){
+        let sql = "update goods set price=?,name=?,category=?,weight=? where id=?";
+        let list = await this.ctx.app.mysql.query(sql,[price,name,category,weight,id]);
         return list.affectedRows;
     }
     

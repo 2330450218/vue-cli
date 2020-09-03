@@ -90,7 +90,7 @@
               <el-input v-model="sizeForm.name" id="name"></el-input>
             </el-form-item>
             <el-form-item label="类别">
-              <el-input v-model="sizeForm.goods_id" id="goods_id"></el-input>
+              <el-input v-model="sizeForm.classify" id="goods_id"></el-input>
             </el-form-item>
             <el-form-item label="价格">
               <el-input v-model="sizeForm.price" id="price"></el-input>

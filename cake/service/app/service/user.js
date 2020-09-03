@@ -3,39 +3,22 @@ const Service = require('egg').Service;
 class UserService extends Service {
 
     // 登录
-    async login(user) {
-        let sql = `select *  from user where phone='${user.phonenumber}'`;
-        let result = await this.ctx.app.mysql.query(sql, user);
-        // console.log(result)
-        // return list;
-        // phonenumber为前端登录账号
-        // password为前端登录密码
-
-        if (result.length < 1) {
-            return {
-                status: 1,
-                msg: "用户不存在"
-            }
-        } else {
-
-            if (user.password == result[0].pwd) {
-                return {
-                    status: 0,
-                    msg: "恭喜您，登陆成功"
-                }
-            } else {
-                return {
-                    status: 1,
-                    msg: "密码错误"
-                }
-            }
-
-        }
+    async login(phone, pwd) {
+        let sql = "select *  from user where phone=? and pwd = ?";
+        let list = await this.ctx.app.mysql.query(sql, [phone, pwd]);
+        return list;
     }
-    // 注册
-    async register(name,pwd,address,phone,birth,isroot) {
+    // 注册后端
+    async register(name, pwd, address, phone, birth, isroot) {
         let sql = "insert into user(name,pwd,address,phone,birth,isroot) values (?,?,?,?,?,?)";
-        let list = await this.ctx.app.mysql.query(sql, [name,pwd,address,phone,birth,isroot]);
+        let list = await this.ctx.app.mysql.query(sql, [name, pwd, address, phone, birth, isroot]);
+        return list.affectedRows;
+        //name为名字，pwd为账号，birth为生日
+    }
+    // 注册前端
+    async registerQian(phone, pwd, birth) {
+        let sql = "insert into user(phone, pwd, birth) values (?,?,?)";
+        let list = await this.ctx.app.mysql.query(sql, [phone, pwd, birth]);
         return list.affectedRows;
         //name为名字，pwd为账号，birth为生日
     }
