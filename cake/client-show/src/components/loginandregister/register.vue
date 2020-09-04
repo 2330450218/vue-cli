@@ -4,12 +4,12 @@
 
     <div class="registerbox">
       <el-input v-model="pnumber" placeholder="请输入您的手机号"></el-input>
-      <el-input placeholder="密码：请输入8~20字符，需同时包含英文和数字" v-model="pwd" show-password></el-input>
-      <el-input placeholder="确认密码" v-model="pwd" show-password></el-input>
-      <div class="yanzheng">
+      <el-input placeholder="密码：请输入8~20字符，可以是英文和数字" v-model="pwd1" show-password></el-input>
+      <el-input placeholder="确认密码" v-model="pwd2" show-password></el-input>
+      <!-- <div class="yanzheng">
         <el-input v-model="input" placeholder="短信验证码"></el-input>
         <el-button type="info" plain>获取验证码</el-button>
-      </div>
+      </div> -->
       <el-date-picker v-model="value1" type="date" placeholder="选择日期"></el-date-picker>
       <span class="tips">{{tips}}</span>
 
@@ -19,18 +19,20 @@
 </template>
 
 <script>
+import { compileFunction } from 'vm';
 export default {
   data() {
     return {
       pnumber: "",
-      pwd: "",
+      pwd1: "",
+      pwd2:"",
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
       },
       value1: "",
-      tips: "1111",
+      tips: "",
     };
   },
   watch: {
@@ -42,24 +44,39 @@ export default {
         this.tips = "账号格式不符，请输入手机号码格式";
       }
     },
-    pwd() {
+    pwd1(){
       let reg = /^[0-9A-Za-z]{8,20}$/;
-      if (reg.test(this.pwd)) {
+      if(reg.test(this.pwd1)){
+        this.tips = '';
+      }else{
+        this.tips = '密码格式不正确'
+      }
+    },
+    pwd2() {
+      let reg = /^[0-9A-Za-z]{8,20}$/;
+      if (reg.test(this.pwd2) && this.pwd2== this.pwd1) {
         this.tips = "";
-      } else {
-        this.tips = "密码格式不符合";
+      } 
+      // else if(this.pwd2=!this.pwd1){
+      //   this.tips = '两次密码输入不一致';
+      // } 
+      else{
+        this.tips = '两次密码输入不一致';
       }
     },
   },
   methods: {
     useradd() {
+      console.log(1);
       //发起网络请求
       // 当没有提示错误并且有出生日期时才能进行请求
       if (this.tips == "" && this.value1) {
         // 添加后端服务器的路由
-        this.$http.post("/#", {
-            pnumber: this.pnumber,
-            pwd: this.pwd,
+        console.log(2)
+        this.$http.post("/register", {
+            pwd: this.pwd1,
+            phone: this.pnumber,
+            birth:this.value1
           })
           .then((res) => {
             // 根据后台返回数据判断
@@ -70,6 +87,9 @@ export default {
             //   console.log("注册成功");
             // }
             
+          }).catch((err)=>{
+            console.log('axios请求失败');
+            console.log(err);
           });
       }
     },
@@ -82,7 +102,7 @@ export default {
 <style >
 .register {
   width: 388px;
-  height: 407px;
+  height: 411px;
   border: 1px solid #ccc;
   padding: 28px 42px;
   box-sizing: border-box;
@@ -129,6 +149,13 @@ button {
   margin-left: 12px;
   border-radius: 2px;
 }
+.el-input__icon {
+    height: 100%;
+    width: 25px;
+    text-align: center;
+    transition: all .3s;
+    line-height: 61px;
+}
 .el-button--info.is-plain {
   color: #424242;
   background: #f4f4f5;
@@ -154,7 +181,7 @@ button {
   color: red;
   font-size: 12px;
   position: absolute;
-  top: 333px;
+  top: 282px;
   left: 45px;
 }
 </style>

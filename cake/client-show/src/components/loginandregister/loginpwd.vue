@@ -40,22 +40,25 @@ export default {
     userlogin() {
       //发起网络请求
       if (this.tips == "") {
+        console.log(1);
         // 添加后端服务器的路由
-        this.$http
-          .post("/#", {
-            pnumber: this.pnumber,
-            pwd: this.pwd,
+        this.$http.post("login", {
+            phonenumber: this.pnumber,
+            password: this.pwd,
           })
           .then((res) => {
-            console.log(res.data);
+            console.log(2)
+            console.log(res.data.msg);
             //根据服务器请求数据判断
-            if (res.data.status == 0) {
-              this.tips = "账号或密码错误";
-              console.log("登录失败");
-            } else {
-              console.log("登陆成功");
-              addCookie(this.pnumber);
+            if(res.data.status == 0 ){
+              alert(res.data.msg);
+            }else if(res.data.msg == '用户不存在'){
+              alert(res.data.msg);
+            }else{
+              alert(res.data.msg)
             }
+          }).catch((err)=>{
+            console.log('axios请求失败')
           });
       }
     },
@@ -100,12 +103,12 @@ button {
   margin-top: 42px;
   border-radius: 2px;
 }
-button.el-button--primary>span  {
+button.el-button--primary > span {
   color: #fff;
 }
 .smallbeizhu {
   font-size: 12px;
- margin-top: 20px;
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -146,10 +149,10 @@ button.el-button--primary>span  {
   color: #684029;
 }
 .tip {
-    color: red;
-    font-size: 12px;
-    position: absolute;
-    top: 129px;
-    left: 4px;
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  top: 129px;
+  left: 4px;
 }
 </style>
