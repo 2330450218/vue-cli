@@ -16,8 +16,32 @@ class goodsService extends Service{
         //     sql += `limit ${(obj.pagenum-1)*10},10`
         // }
         let sql = "select * from goods";
-        var result = await this.app.mysql.query(sql);
+        var result = await this.showcakeGoodsctx.app.mysql.query(sql);
         return result;
+    }
+    //展示前端蛋糕商品
+    async showCakeGoods(){
+        let sql="select *from goods,lable where goods_cate='1' and goods.goods_id=lable.Goods_title";
+        var result = await this.ctx.app.mysql.query(sql);
+        return result
+    }
+    //展示前端面包商品
+    async showBreadGoods(){
+        let sql="select *from goods,lable where goods_cate='2' and goods.goods_id=lable.Goods_title";
+        var result = await this.ctx.app.mysql.query(sql);
+        return result
+    }
+    //展示前端冰淇淋商品
+    async showIcecreamGoods(){
+        let sql="select *from goods,lable where goods_cate='3' and goods.goods_id=lable.Goods_title";
+        var result = await this.ctx.app.mysql.query(sql);
+        return result
+    }
+    //展示前端咖啡商品
+    async showCoffeeGoods(){
+        let sql="select *from goods,lable where goods_cate='4' and goods.goods_id=lable.Goods_title";
+        var result = await this.ctx.app.mysql.query(sql);
+        return result
     }
 
     async uploadGoods() {

@@ -10,6 +10,24 @@ class goodsController extends Controller {
         let c = await this.ctx.service.goodsService.showAllGoods(pagenum, pagesize);
         this.ctx.response.body = c;
     }
+
+    async showCakeGoods(){
+        let list = await this.ctx.service.goodsService.showCakeGoods();
+        this.ctx.response.body = list;
+    }
+    async showBreadGoods(){
+        let list = await this.ctx.service.goodsService.showBreadGoods();
+        this.ctx.response.body = list;
+    }
+    async showIcecreamGoods(){
+        let list = await this.ctx.service.goodsService.showIcecreamGoods();
+        this.ctx.response.body = list;
+    }
+    async showCoffeeGoods(){
+        let list = await this.ctx.service.goodsService.showCoffeeGoods();
+        this.ctx.response.body = list;
+    }
+
     async uploadGoods(){
         // let name = this.ctx.request.body.name;
         // let price = this.ctx.request.body.price;
@@ -30,7 +48,6 @@ class goodsController extends Controller {
         let name = this.ctx.request.body.name;
         let price = this.ctx.request.body.price;
         let category = this.ctx.request.body.category;
-        let weight = this.ctx.request.body.weight;
         let list = await this.ctx.service.goodsService.updateGoods(id,name,price,category);
         this.ctx.response.body = list;
     }

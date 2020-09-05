@@ -103,12 +103,12 @@ button {
   margin-top: 42px;
   border-radius: 2px;
 }
-button.el-button--primary > span {
+button.el-button--primary>span  {
   color: #fff;
 }
 .smallbeizhu {
   font-size: 12px;
-  margin-top: 20px;
+ margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }

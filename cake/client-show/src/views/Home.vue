@@ -1,20 +1,18 @@
 <template>
-  <div class="home">  
-    <!-- äÖÈ¾ -->
-    <Home/>
+  <div class="home">
+    <!-- <HelloWorld/> -->
+  <swiper></swiper>
   </div>
 </template>
-
 <script>
 // @ is an alias to /src
-import Home from '@/components/Home.vue'
-
+// import HelloWorld from "@/components/HelloWorld.vue";
+import swiper from "./swiper.vue";
 export default {
+  name: "Home",
   components: {
-    Home
-  }
-}
+    // HelloWorld,
+    swiper,
+  },
+};
 </script>
-<style scoped>
-
-</style>

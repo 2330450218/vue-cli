@@ -100,6 +100,7 @@ export default {
 
 
 <style >
+
 .register {
   width: 388px;
   height: 411px;

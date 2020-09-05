@@ -23,6 +23,14 @@ module.exports=app=>{
     router.get("/showviewGoods",controller.goodsController.showviewGoods)
     //展示后端所有商品
     router.get("/showAllGoods",controller.goodsController.showAllGoods)
+    // 展示蛋糕
+    router.get("/showCakeGoods",controller.goodsController.showCakeGoods)
+    // 展示面包
+    router.get("/showBreadGoods",controller.goodsController.showBreadGoods)
+    // 展示冰淇淋
+    router.get("/showIcecreamGoods",controller.goodsController.showIcecreamGoods)
+    // 展示咖啡
+    router.get("/showCoffeeGoods",controller.goodsController.showCoffeeGoods)
     router.get("/deleteGoods",controller.goodsController.deleteGoods)
     //修改商品信息
     router.post("/updateGoods",controller.goodsController.updateGoods)
